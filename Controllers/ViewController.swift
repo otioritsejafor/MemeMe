@@ -78,23 +78,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // MARK: Meme Text Delegate
     
     @IBAction func shareImage(_ sender: Any) {
-        let activityVC = UIActivityViewController(activityItems: [generateMemedImage()], applicationActivities: nil)
-        activityVC.popoverPresentationController?.sourceView = self.view
-        
-        self.present(activityVC, animated: true, completion: nil)
-        activityVC.completionWithItemsHandler = {(activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) in
-            if !completed {
-                // User canceled
-                //self.save()
-                return
-            }
-            
-            // User completed activity
+        let memedImage = [generateMemedImage()]
+        let activityVC = UIActivityViewController(activityItems: memedImage, applicationActivities: nil)
+        activityVC.completionWithItemsHandler = { activity, success, items, error in
             self.save()
             self.dismiss(animated: true, completion: nil)
-            
         }
-        
+        present(activityVC, animated: true, completion: nil)
         //self.dismiss(animated: true, completion: nil)
     }
     
