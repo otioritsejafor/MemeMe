@@ -11,19 +11,7 @@ import UIKit
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     //MARK: Properties
-    struct Meme {
-        var topText: String?
-        var bottomText: String?
-        var originalImage: UIImage?
-        var memedImage: UIImage?
-    }
-    
     let memeTextDelegate = MemeTextFieldDelegate()
-    let memeTextAttributes:[NSAttributedString.Key: Any] = [
-        NSAttributedString.Key(rawValue: NSAttributedString.Key.strokeColor.rawValue): UIColor.black,
-        NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): UIColor.white,
-        NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-        NSAttributedString.Key(rawValue: NSAttributedString.Key.strokeWidth.rawValue): -4.5 ]
     
     
     // MARK: Outlets
@@ -34,7 +22,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var shareButton: UIBarButtonItem!
     
+    // Adjust height based on screen size and orientation
     @IBOutlet weak var constraintHeight: NSLayoutConstraint!
+    
     // Reference outlet for Tool Bar
     @IBOutlet weak var toolBar: UIToolbar!
     
@@ -58,6 +48,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         topText.defaultTextAttributes = memeTextAttributes
         bottomText.defaultTextAttributes = memeTextAttributes
         
+        self.tabBarController?.tabBar.isHidden = true
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,6 +64,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         unsubscribeFromKeyboardNotifications()
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -188,7 +181,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Create the meme
         
         let memedImage = generateMemedImage()
-        _ = Meme(topText: topText.text!, bottomText: bottomText.text!, originalImage: imagePickerView.image!, memedImage: memedImage)
+        let meme = Meme(topText: topText.text!, bottomText: bottomText.text!, originalImage: imagePickerView.image!, memedImage: memedImage)
+        
+        // Add it to the memes array in the Application Delegate
+        (UIApplication.shared.delegate as! AppDelegate).memes.append(meme)
     }
     
     func generateMemedImage() -> UIImage {
