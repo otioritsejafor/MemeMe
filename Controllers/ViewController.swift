@@ -1,10 +1,8 @@
 //
 //  ViewController.swift
 //  imagePicker
-//
 //  Created by Oti Oritsejafor on 10/13/18.
 //  Copyright © 2018 Magloboid. All rights reserved.
-//
 
 import UIKit
 
@@ -32,7 +30,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var navBar: UINavigationBar!
     
     
-    //var meme: Meme?
     // MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +45,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         topText.defaultTextAttributes = memeTextAttributes
         bottomText.defaultTextAttributes = memeTextAttributes
         
-        self.tabBarController?.tabBar.isHidden = true
+        //self.tabBarController?.tabBar.isHidden = true
         
     }
     
@@ -58,6 +55,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         subscribeToKeyboardNotifications()
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         shareButton.isEnabled = (imagePickerView.image != nil)
+        self.tabBarController?.tabBar.isHidden = true
         
     }
     
@@ -131,9 +129,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @objc func keyboardWillShow(_ notification: Notification) {
-        
-        if(view.frame.origin.y == 0) {
-            view.frame.origin.y = -getKeyboardHeight(notification)
+        if memeTextDelegate.activeField?.text == bottomText.text {
+            if(view.frame.origin.y == 0) {
+                view.frame.origin.y = -getKeyboardHeight(notification)
+            }
         }
     }
     
@@ -181,7 +180,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // TODO: Hide toolbar and navbar
         self.toolBar.isHidden = true
-        //        self.navBar.isHidden = true
+        self.navigationController?.navigationBar.isHidden = true
+        //self.navBar.isHidden = true
         
         
         UIGraphicsBeginImageContext(self.view.frame.size)
@@ -196,6 +196,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
        // let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         
         self.toolBar.isHidden = false
+        self.navigationController?.navigationBar.isHidden = false
         
         return memedImage
     }
@@ -215,9 +216,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
     }
-    
-    
-    
     
 }
 
