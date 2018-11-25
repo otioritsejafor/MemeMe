@@ -11,4 +11,11 @@ import UIKit
 
 class MemeDetailViewController: UIViewController {
     var meme: Meme!
+    @IBOutlet weak var image: UIImage!
+    @IBOutlet weak var constraintHeight: NSLayoutConstraint!
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+    }
 }

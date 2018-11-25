@@ -184,8 +184,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         //self.navBar.isHidden = true
         
         
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        UIGraphicsBeginImageContext(self.imagePickerView.frame.size)
+        view.drawHierarchy(in: self.imagePickerView.frame, afterScreenUpdates: true)
         let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         // Render view to an image
