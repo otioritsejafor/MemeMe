@@ -12,6 +12,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     let memeTextDelegate = MemeTextFieldDelegate()
     
     
+    
     // MARK: Outlets
     @IBOutlet weak var imagePickerView: UIImageView!
     @IBOutlet weak var pickImageButton: UIBarButtonItem!
@@ -19,6 +20,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var topText: UITextField!
     @IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var shareButton: UIBarButtonItem!
+    
     
     // Adjust height based on screen size and orientation
     @IBOutlet weak var constraintHeight: NSLayoutConstraint!
@@ -45,6 +47,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         topText.defaultTextAttributes = memeTextAttributes
         bottomText.defaultTextAttributes = memeTextAttributes
         
+        topText.autocapitalizationType = .allCharacters
+        bottomText.autocapitalizationType = .allCharacters
         //self.tabBarController?.tabBar.isHidden = true
         
     }
@@ -178,27 +182,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func generateMemedImage() -> UIImage {
         
-        // TODO: Hide toolbar and navbar
-        self.toolBar.isHidden = true
-        self.navigationController?.navigationBar.isHidden = true
-        //self.navBar.isHidden = true
-        
-        
-        UIGraphicsBeginImageContext(self.imagePickerView.frame.size)
-        view.drawHierarchy(in: self.imagePickerView.frame, afterScreenUpdates: true)
-        let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        self.view.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let memedImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-        // Render view to an image
+        let captureFrame = view.convert(imagePickerView.frame, from:self.view)
+        let newImage = crop(image: memedImage, cropRect: captureFrame)
         
-       // UIGraphicsBeginImageContext(self.view.frame.size)
-        //view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
-        //view.drawHierarchy(in: self.imagePickerView.frame, afterScreenUpdates: true)
-       // let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        
-        self.toolBar.isHidden = false
-        self.navigationController?.navigationBar.isHidden = false
-        
-        return memedImage
+        return newImage
     }
     
     
@@ -219,4 +210,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
 }
 
+func crop(image: UIImage, cropRect: CGRect) -> UIImage {
+    UIGraphicsBeginImageContextWithOptions(cropRect.size, false, image.scale)
+    let origin = CGPoint(x: cropRect.origin.x * CGFloat(-1), y: cropRect.origin.y * CGFloat(-1))
+    image.draw(at: origin)
+    let result = UIGraphicsGetImageFromCurrentImageContext()!
+    UIGraphicsEndImageContext();
+    return result
+}
 

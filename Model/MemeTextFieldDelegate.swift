@@ -10,11 +10,12 @@ import Foundation
 import UIKit
 
 class MemeTextFieldDelegate: NSObject, UITextFieldDelegate {
+
     
     var activeField: UITextField?
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let maxLength = 24
+        let maxLength = 35
         let currentString: NSString = textField.text! as NSString
         let newString: NSString =
             currentString.replacingCharacters(in: range, with: string) as NSString
@@ -27,7 +28,7 @@ class MemeTextFieldDelegate: NSObject, UITextFieldDelegate {
         }
         activeField = textField
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         textField.resignFirstResponder()
